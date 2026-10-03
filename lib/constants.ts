@@ -7,11 +7,12 @@ export const CATEGORIES = [
   'Places',
   'Names',
   'Custom',
+  'My Text',
   'Adaptive',
 ] as const;
 
 /** Categories the AI can be asked about directly (everything except the two meta options). */
-export const CONCRETE_CATEGORIES = CATEGORIES.filter((c) => c !== 'Custom' && c !== 'Adaptive');
+export const CONCRETE_CATEGORIES = CATEGORIES.filter((c) => c !== 'Custom' && c !== 'My Text' && c !== 'Adaptive');
 
 export const DIFFICULTIES = ['Easy', 'Medium', 'Hard', 'Adaptive'] as const;
 
