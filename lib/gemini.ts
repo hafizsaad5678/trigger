@@ -16,6 +16,16 @@ export const GEMINI_MODELS = [
   { id: 'gemini-3.8-flash', label: 'Gemini 3.8 Flash', badge: 'FAST & FREE', recommended: true },
 ];
 
+function extractText(json: any): string {
+  const parts = json?.candidates?.[0]?.content?.parts;
+  if (!Array.isArray(parts)) return '';
+  return parts
+    .filter((p: any) => typeof p?.text === 'string' && !p?.thought)
+    .map((p: any) => p.text)
+    .join('')
+    .trim();
+}
+
 export async function testGeminiKey(apiKey: string, model = DEFAULT_GEMINI_MODEL): Promise<void> {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey.trim()}`;
   const res = await fetch(url, {
@@ -23,7 +33,7 @@ export async function testGeminiKey(apiKey: string, model = DEFAULT_GEMINI_MODEL
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       contents: [{ parts: [{ text: 'Reply with the single word: ok' }] }],
-      generationConfig: { maxOutputTokens: 16 },
+      generationConfig: { maxOutputTokens: 512 },
     }),
   });
 
@@ -39,8 +49,11 @@ export async function testGeminiKey(apiKey: string, model = DEFAULT_GEMINI_MODEL
   }
 
   const json = await res.json();
-  if (!json?.candidates?.[0]?.content?.parts?.[0]?.text) {
-    throw new GeminiError('Received empty response from Gemini.', 'bad_response');
+  // Thinking models can spend the token budget before emitting text; a 200 with a
+  // candidate (even without text) still proves the key is valid.
+  if (!extractText(json) && !json?.candidates?.length) {
+    const reason = json?.promptFeedback?.blockReason || 'no candidates returned';
+    throw new GeminiError(`Received empty response from Gemini (${reason}).`, 'bad_response');
   }
 }
 
@@ -90,7 +103,7 @@ export async function generateWordsGemini(
         generationConfig: {
           responseMimeType: 'application/json',
           temperature: 0.8,
-          maxOutputTokens: 1000,
+          maxOutputTokens: 4000,
         },
       }),
     });
@@ -105,7 +118,7 @@ export async function generateWordsGemini(
     }
 
     const data = await res.json();
-    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    const rawText = extractText(data);
     if (!rawText) {
       return { words: [], error: 'Empty response from Gemini' };
     }
