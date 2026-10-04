@@ -9,6 +9,7 @@ const ICONS: Record<string, IconName> = {
   Places: 'place',
   Names: 'badge',
   Custom: 'edit',
+  'My Text': 'upload-file',
   Adaptive: 'auto-awesome',
 };
 
