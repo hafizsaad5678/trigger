@@ -277,7 +277,7 @@ export async function deleteWordById(wordId: number): Promise<void> {
   await db.delete(sessionWords).where(eq(sessionWords.id, wordId));
 }
 
-export async function getWordsMarkedAsAgain(category?: string): Promise<string[]> {
+export async function getWordsMarkedAsAgain(category?: string, strict = false): Promise<string[]> {
   const db = getDb();
   const rows = await db
     .select({ word: sessionWords.word, category: sessions.category })
@@ -297,7 +297,7 @@ export async function getWordsMarkedAsAgain(category?: string): Promise<string[]
     ? rows.filter((r) => !r.category.toLowerCase().includes(category.toLowerCase()))
     : rows;
 
-  for (const r of [...matching, ...others]) {
+  for (const r of strict ? matching : [...matching, ...others]) {
     const key = r.word.toLowerCase();
     if (!seen.has(key)) {
       seen.add(key);
