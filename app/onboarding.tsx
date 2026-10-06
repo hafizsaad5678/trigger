@@ -326,7 +326,7 @@ export default function OnboardingScreen() {
             styles.apiInput,
             {
               backgroundColor: colors.background,
-              color: colors.text,
+              color: '#FFFFFF',
               borderColor: colors.outlineVariant,
             },
           ]}

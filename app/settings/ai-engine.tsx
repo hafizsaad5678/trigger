@@ -150,7 +150,7 @@ export default function AiEngineScreen() {
                 >
                   <Icon name="auto-awesome" size={16} color="primary" />
                   <View>
-                    <Txt variant="labelMd" style={{ color: colors.primary, fontWeight: '700' }}>
+                    <Txt variant="labelMd" style={{ color: '#FFFFFF', fontWeight: '700' }}>
                       Google Gemini
                     </Txt>
                     <Txt variant="labelSm" style={{ color: '#22c55e', fontSize: 10, fontWeight: '700' }}>FREE</Txt>
@@ -163,7 +163,7 @@ export default function AiEngineScreen() {
               <TextInput
                 style={[styles.input, {
                   backgroundColor: colors.background,
-                  color: colors.text,
+                  color: '#FFFFFF',
                   borderColor: colors.outlineVariant,
                 }]}
                 placeholder="AIzaSy... (Google AI Studio key)"
