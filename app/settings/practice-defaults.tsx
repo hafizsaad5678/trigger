@@ -8,6 +8,7 @@ import { DropdownPicker, type DropdownOption } from '@/components/DropdownPicker
 import { ErrorModal } from '@/components/ErrorModal';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { Segmented } from '@/components/Segmented';
+import { TextSourceInput } from '@/components/TextSourceInput';
 import { Txt } from '@/components/Txt';
 import { VoicePicker } from '@/components/VoicePicker';
 import { Colors, Shadows } from '@/constants/theme';
@@ -35,6 +36,7 @@ export default function PracticeDefaultsScreen() {
 
   const [defaultCategory, setDefaultCategory] = useState<string>(DEFAULT_CATEGORY);
   const [customCategory, setCustomCategory] = useState<string>('');
+  const [customText, setCustomText] = useState<string>('');
   const [difficulty, setDifficulty] = useState<string>(DEFAULT_DIFFICULTY);
   const [defaultDuration, setDefaultDuration] = useState<number>(DEFAULT_DURATION_MIN);
   const [defaultInterval, setDefaultInterval] = useState<number>(DEFAULT_INTERVAL_SEC);
@@ -48,7 +50,7 @@ export default function PracticeDefaultsScreen() {
   useFocusEffect(
     useCallback(() => {
       (async () => {
-        const [cat, diff, dur, interval, acc, voice, rate, customCat] = await Promise.all([
+        const [cat, diff, dur, interval, acc, voice, rate, customCat, customTxt] = await Promise.all([
           getSetting('defaultCategory'),
           getSetting('difficulty'),
           getSetting('defaultDuration'),
@@ -57,6 +59,7 @@ export default function PracticeDefaultsScreen() {
           getSetting('voiceId'),
           getSetting('speechRate'),
           getSetting('customCategory'),
+          getSetting('customText'),
         ]);
         if (cat) setDefaultCategory(cat);
         if (diff) setDifficulty(diff);
@@ -66,6 +69,7 @@ export default function PracticeDefaultsScreen() {
         if (voice) setVoiceId(voice || undefined);
         if (rate) setSpeechRate(parseFloat(rate) || DEFAULT_SPEECH_RATE);
         if (customCat) setCustomCategory(customCat);
+        if (customTxt) setCustomText(customTxt);
       })();
     }, [])
   );
@@ -82,6 +86,7 @@ export default function PracticeDefaultsScreen() {
         setSetting('voiceId', voiceId ?? ''),
         setSetting('speechRate', String(speechRate)),
         setSetting('customCategory', customCategory.trim()),
+        setSetting('customText', customText),
       ]);
       setSuccessModal(true);
     } catch {
@@ -121,6 +126,9 @@ export default function PracticeDefaultsScreen() {
               value={customCategory}
               onChangeText={setCustomCategory}
             />
+          )}
+          {defaultCategory === 'My Text' && (
+            <TextSourceInput value={customText} onChange={setCustomText} />
           )}
         </Card>
 
