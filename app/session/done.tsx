@@ -66,14 +66,26 @@ export default function SessionDoneScreen() {
           )}
 
           <PrimaryButton
+            label="Verify Writing & Spell-Check"
+            icon="spellcheck"
+            onPress={() =>
+              router.replace({
+                pathname: '/session/spellcheck',
+                params: { sessionId: String(sessionId) },
+              })
+            }
+            style={styles.full}
+          />
+          <PrimaryButton
             label="View & Check Word List"
             icon="checklist"
+            variant="tonal"
             onPress={() => router.replace('/(tabs)/history' as never)}
             style={styles.full}
           />
           <PrimaryButton
             label="Start New Session"
-            variant="tonal"
+            variant="text"
             size="md"
             onPress={() => router.replace('/(tabs)' as never)}
             style={styles.full}
