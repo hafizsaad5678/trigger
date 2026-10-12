@@ -307,6 +307,19 @@ export default function SessionWordsScreen() {
 
         {/* Actions */}
         <View style={styles.actions}>
+          <PrimaryButton
+            label="Launch Spelling & Writing Quiz"
+            icon="spellcheck"
+            variant="primary"
+            size="md"
+            onPress={() =>
+              router.push({
+                pathname: '/session/spellcheck',
+                params: { sessionId: String(sessionId) },
+              })
+            }
+            disabled={words.length === 0}
+          />
           {retestCount > 0 && (
             <PrimaryButton
               label={`Retest Misspelled Words (${retestCount})`}
